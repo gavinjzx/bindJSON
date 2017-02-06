@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/lib/jquery-1.12.4.min.js"></script>
+    <script src="js/lib/jquery.bindJSON.js"></script>
+    <style>
+        .red {
+            color: red;
+        }
+
+        .jsTemplate {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<ul class="jsTemplate" id="dataTemplate">
+    <li>
+        <div>
+            <div class="hd">{placeName}</div>
+            <div class="bd">活动时间：{activitytime}</div>
+        </div>
+    </li>
+</ul>
+<ul id="dataObj" data-templateID="dataTemplate" data-jsonUrl="js/json/data.json">
+    <li class="loadInfo">数据加载中……</li>
+</ul>
+<script>
+    $("#dataObj").bindJSON("list", {},
+            //回调函数示例，偶数行添加变红样式
+            function () {
+                $("ul>li:nth-child(even)").addClass("red");
+            }).removeClass("red");
+</script>
+</body>
+</html>

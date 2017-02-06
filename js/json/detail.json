@@ -1,0 +1,13 @@
+{
+  "data": {
+    "placeID": "1",
+    "placeName": "盐田街道办1号场",
+    "attendAmount": 4,
+    "enrollCount": 6,
+    "activitytime": "20:00-22:00"
+  },
+  "success": true,
+  "totalRecord": 100,
+  "errorCode": null,
+  "msg": null
+}

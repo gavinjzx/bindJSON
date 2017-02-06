@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/lib/jquery-1.12.4.min.js"></script>
+    <script src="js/lib/jquery.bindJSON.js"></script>
+    <style>
+        .red {
+            color: red;
+        }
+
+        .jsTemplate {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<!--先给容器添加jsTemplate样式，这样数据没加载时容器是隐藏的，不会直接出现不友好的花括号和字段名-->
+<section id="list" class="jsTemplate" data-jsonUrl="js/json/detail.json">
+    <div class="hd">{placeName}</div>
+    <div class="bd">活动时间：{activitytime}</div>
+</section>
+<script>
+    $("[data-jsonUrl]").bindJSON("detail", {},
+            //回调函数，数据加载完成后，显示容器。
+            function () {
+                $("#list").removeClass("jsTemplate");
+            });
+</script>
+</body>
+</html>
