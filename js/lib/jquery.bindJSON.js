@@ -1,5 +1,5 @@
 /**
- * Created by gavin joe(阿提) on 2017/2/5.
+ * Created by gavin joe(阿提) on 2017/2/5.微信号:gavinjzx,qq:120534960
  */
 (function ($) {
     //在数组上添加定义二维数组的方法
