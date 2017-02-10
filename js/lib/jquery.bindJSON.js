@@ -50,7 +50,6 @@
             }
             ;
         $.extend(pageSetting, option);
-        console.log(pageSetting);
         //临时模板数据
         return function (ps) {
             var totalPage = Math.ceil(ps.totalRecords / ps.pageSize);
@@ -86,7 +85,6 @@
                 }
             }
             $.each(arrPages, function (i, item) {
-                console.log(arrPages);
                 strPageLink += ps.pageLinkTemplate.replace(/\[page:pageNum\]/g, item);
             });
             strFirst = "<li data-page='[page:pageNum]'>&lt;&lt;</li>".replace(/\[page:pageNum\]/g, 1);
@@ -154,8 +152,6 @@
                     var htmlContent = replaceTemplate(strTemplate, jsonData.data);
                     $(htmlObjID).html(htmlContent);
                     //分页代码开始
-                    //console.log(listSetting.isPage);
-                    //console.log(listSetting.pageSize);
                     if (listSetting.isPage) {
                         listSetting.totalRecords = jsonData.totalRecord;
                         var pageHtml = getPageHtml(listSetting);
