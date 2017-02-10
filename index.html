@@ -10,30 +10,33 @@
             color: red;
         }
 
-        .jsTemplate {
+        .jsTemplate, .hide {
             display: none;
         }
     </style>
 </head>
 
 <body>
-<ul class="jsTemplate" id="dataTemplate">
-    <li>
+<ul id="dataObj" class="hide" data-loadInfo="数据加载中……" data-jsonUrl="js/json/data.json">
+    <li data-href="detail.html?id={placeID}">
         <div>
+            <div class="hd">{placeName}</div>
             <div class="hd">{placeName}</div>
             <div class="bd">活动时间：{activitytime}</div>
         </div>
     </li>
 </ul>
-<ul id="dataObj" data-templateID="dataTemplate" data-jsonUrl="js/json/data.json">
-    <li class="loadInfo">数据加载中……</li>
-</ul>
 <script>
-    $("#dataObj").bindJSON("list", {},
-            //回调函数示例，偶数行添加变红样式
+    $("#dataObj").bindJSON("list", {isPage: true, pageSize: 2},
+            //回调函数示例，
             function () {
-                $("ul>li:nth-child(even)").addClass("red");
-            }).removeClass("red");
+                //偶数行添加变红样式
+                $("#dataObj>li:nth-child(even)").addClass("red");
+                //li元素整体添加链接
+                $("#dataObj>li").on("click", function () {
+                    location.href = $(this).attr("data-href");
+                })
+            })
 </script>
 </body>
 </html>

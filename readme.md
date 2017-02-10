@@ -36,6 +36,11 @@ json数据绑定jQuery插件
 
   3、绑定单条数据到页面
     <pre><code>$("#dataObj").bindJSON("detail",{},function(){});</code></pre>
+    
+      20170210更新：list方法添加分页功能。
+      使用方法：传参数时isPage:true;
+      如
+      $("#dataObj").bindJSON("list", {isPage: true, pageSize: 2});
 
 
 
