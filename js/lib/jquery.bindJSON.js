@@ -64,15 +64,14 @@
             var strPageLink = "";//数字页码区
 
             if (!(totalPage > 10)) {
-                arrPages = dimArray(10, 1);
-
+                arrPages = dimArray(totalPage, 1);
             }
             if (totalPage > 10) {
                 //分成三种情况,
                 // 1、当前页<10
                 //2.当前页>10 and <总页数-5
                 if (ps.currentPage <= 10) {
-                    arrPages = dimArray(10, 1);
+                    arrPages = dimArray(totalPage, 1);
                 }
                 if (ps.currentPage > 10) {
                     if (ps.currentPage <= (totalPage - 5)) {
@@ -89,13 +88,13 @@
             });
             strFirst = "<li data-page='[page:pageNum]'>&lt;&lt;</li>".replace(/\[page:pageNum\]/g, 1);
             strPrev = "<li data-page='[page:pageNum]'>&lt;</li>".replace(/\[page:pageNum\]/g, parseInt(ps.currentPage) - 1);
-            strNext = "<li data-page='[page:pageNum]'>&gt;</li>".replace(/\[page:pageNum\]/g, parseInt(ps.currentPage) + 1);
+            strNext = "<li data-page='[page:pageNum]'>&gt;</li>".replace(/\[page:pageNum\]/g, (parseInt(ps.currentPage) + 1) > totalPage ? totalPage : parseInt(ps.currentPage) + 1);
             strLast = "<li data-page='[page:pageNum]'>&gt;&gt;</li>".replace(/\[page:pageNum\]/g, totalPage);
-            if (ps.currentPage == 1) {
+            if (ps.currentPage === 1) {
                 strFirst = "";
                 strPrev = "";
             }
-            if (ps.currentPage == ps.pages) {
+            if (parseInt(ps.currentPage) === totalPage) {
                 strNext = "";
                 strLast = "";
             }
@@ -159,7 +158,7 @@
                         $(htmlObjID).next().remove();
                         $(htmlObjID).after(pageHtml);
                         $(htmlObjID).next().find("li[data-page='" + listSetting.currentPage + "']").addClass("currentPage");
-                        $(htmlObjID).next().find("li[data-page!='" + listSetting.currentPage + "']").on("click", function () {
+                        $(htmlObjID).next().find("li").on("click", function () {
                             var currentPage = $(this).attr("data-page");
                             var jsonUrl = $(htmlObjID).attr("data-jsonUrl");
                             if (jsonUrl.indexOf("page") > -1) {
@@ -175,7 +174,9 @@
                             }
                             $(htmlObjID).attr("data-jsonUrl", jsonUrl);
                             listSetting.currentPage = parseInt(currentPage);
-                            $(htmlObjID).bindJSON("list", listSetting, callback);
+                            if (!$(this).hasClass("currentPage")) {
+                                $(htmlObjID).bindJSON("list", listSetting, callback);
+                            }
                         })
                     }
                     //分页代码结束
