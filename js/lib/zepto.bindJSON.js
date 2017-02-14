@@ -132,6 +132,7 @@
                     totalRecords: 0
                 };
                 //初始化参数
+                listSetting.isMobile = (/(iemobile|iphone|ipod|android|nokia|sonyericsson|blackberry|samsung|sec\-|windows ce|motorola|mot\-|up.b|midp\-)/gi).test(navigator.appVersion);
                 $.extend(listSetting, option);
                 //console.log(listSetting);
                 var htmlObjID = "#" + this.attr("id");
