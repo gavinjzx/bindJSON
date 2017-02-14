@@ -71,7 +71,7 @@
                 // 1、当前页<10
                 //2.当前页>10 and <总页数-5
                 if (ps.currentPage <= 10) {
-                    arrPages = dimArray(totalPage, 1);
+                    arrPages = dimArray(10, 1);
                 }
                 if (ps.currentPage > 10) {
                     if (ps.currentPage <= (totalPage - 5)) {
@@ -111,6 +111,10 @@
         }(pageSetting);
     };
 
+    var getPageHtmlMobile = function () {
+
+    };
+
     //方法
     // list:数据遍历列表方法
     //detail:详细信息展示方法
@@ -122,6 +126,7 @@
                 //参数设置
                 var listSetting = {
                     isPage: false,
+                    isMobile: false,
                     pageSize: 20,
                     currentPage: 1,
                     totalRecords: 0
@@ -141,43 +146,210 @@
                     $(htmlObjTemplateID).html(strTemplate);
                 }
                 //数据载入提示并去掉隐藏样式.hide
-                //console.log(strTemplate);
-                var strLoadInfo = $(htmlObjID).attr("data-loadInfo");
-                $(htmlObjID).html(strLoadInfo).removeClass("hide");
+                var strLoadInfo = "<div class='loading'>" + $(htmlObjID).attr("data-loadInfo") + "</div>";
+                if (listSetting.currentPage == 1) {
+                    $(htmlObjID).before(strLoadInfo).removeClass("hide");
+                }
+                //取得带分页代码的jsonUrl
+                var getJsonUrl = function (currentPage, pageSize) {
+                    var jsonUrl = $(htmlObjID).attr("data-jsonUrl");
+                    if (jsonUrl.indexOf("page") > -1) {
+                        jsonUrl = jsonUrl.replace(/page=(\d+)*/g, "page=" + currentPage);
+                    }
+                    else {
+                        if (jsonUrl.indexOf("?") > -1) {
+                            jsonUrl = jsonUrl + "&page=" + currentPage;
+                        }
+                        else {
+                            jsonUrl = jsonUrl + "?page=" + currentPage;
+                        }
+                    }
+                    if (jsonUrl.indexOf("pageSize") > -1) {
+                        jsonUrl = jsonUrl.replace(/pageSize=(\d+)*/g, "pageSize=" + pageSize);
+                    }
+                    else {
+                        if (jsonUrl.indexOf("?") > -1) {
+                            jsonUrl = jsonUrl + "&pageSize=" + pageSize;
+                        }
+                        else {
+                            jsonUrl = jsonUrl + "?pageSize=" + pageSize;
+                        }
+                    }
+                    console.log(jsonUrl);
+                    return jsonUrl;
+                };
                 //获取jsonURL
                 var strJsonUrl = this.attr("data-jsonUrl");
-
+                //if (listSetting.isPage) {
+                strJsonUrl = getJsonUrl(listSetting.currentPage, listSetting.pageSize)
+                    //}
+                ;
+                console.log(strJsonUrl);
                 $.getJSON(strJsonUrl, function (jsonData) {
                     var htmlContent = replaceTemplate(strTemplate, jsonData.data);
-                    $(htmlObjID).html(htmlContent);
+                    listSetting.totalRecords = jsonData.totalRecord;
+                    if (listSetting.isMobile && listSetting.currentPage > 1) {
+                        //如果是手机采用append
+                        $(htmlObjID).prev().remove();
+                        $(htmlObjID).append(htmlContent);
+                        //console.log("htmlObjHtml:" + $(htmlObjID).html());
+                        //console.log("htmlContent:" + htmlContent);
+                    }
+                    else {
+                        //如果是非手机采用替换方法
+                        $(htmlObjID).prev().remove();
+                        $(htmlObjID).html(htmlContent);
+                    }
                     //分页代码开始
                     if (listSetting.isPage) {
+
+                        //总页数
+                        var totalPage = Math.ceil(listSetting.totalRecords / listSetting.pageSize);
                         listSetting.totalRecords = jsonData.totalRecord;
-                        var pageHtml = getPageHtml(listSetting);
-                        //console.log(pageHtml);
-                        $(htmlObjID).next().remove();
-                        $(htmlObjID).after(pageHtml);
-                        $(htmlObjID).next().find("li[data-page='" + listSetting.currentPage + "']").addClass("currentPage");
-                        $(htmlObjID).next().find("li").on("click", function () {
-                            var currentPage = $(this).attr("data-page");
-                            var jsonUrl = $(htmlObjID).attr("data-jsonUrl");
-                            if (jsonUrl.indexOf("page") > -1) {
-                                jsonUrl = jsonUrl.replace(/page=(\d+)*/g, "page=" + currentPage);
-                            }
-                            else {
-                                if (jsonUrl.indexOf("?") > -1) {
-                                    jsonUrl = jsonUrl + "&page=" + currentPage;
+                        if (listSetting.isMobile) {
+                            //http://yijiebuyi.com/blog/957bfb7468d2cc53d72ddebc2b5d39d3.html
+                            //文档高度
+                            var getDocumentTop = function () {
+                                var scrollTop = 0, bodyScrollTop = 0, documentScrollTop = 0;
+                                if (document.body) {
+                                    bodyScrollTop = document.body.scrollTop;
+                                }
+                                if (document.documentElement) {
+                                    documentScrollTop = document.documentElement.scrollTop;
+                                }
+                                scrollTop = (bodyScrollTop - documentScrollTop > 0) ? bodyScrollTop : documentScrollTop;
+                                return scrollTop;
+                            };
+                            //可视窗口高度
+                            var getWindowHeight = function () {
+                                var windowHeight = 0;
+                                if (document.compatMode == "CSS1Compat") {
+                                    windowHeight = document.documentElement.clientHeight;
+                                } else {
+                                    windowHeight = document.body.clientHeight;
+                                }
+                                return windowHeight;
+                            };
+                            //滚动条滚动高度
+                            var getScrollHeight = function () {
+                                var scrollHeight = 0, bodyScrollHeight = 0, documentScrollHeight = 0;
+                                if (document.body) {
+                                    bodyScrollHeight = document.body.scrollHeight;
+                                }
+                                if (document.documentElement) {
+                                    documentScrollHeight = document.documentElement.scrollHeight;
+                                }
+                                scrollHeight = (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight;
+                                return scrollHeight;
+                            };
+
+
+                            //清除状态
+                            var clearStatus = function () {
+                                //延时1秒清除
+                                setTimeout(function () {
+                                    $(htmlObjID).next().remove();
+                                }, 1000)
+                            };
+                            //loading
+                            var loading = function () {
+                                if (listSetting.currentPage < totalPage) {
+                                    if (!$(".loading")[0]) {
+                                        $(htmlObjID).after("<div class='loading'>载入中……</div>");
+                                    }
+                                    //todo
+
                                 }
                                 else {
-                                    jsonUrl = jsonUrl + "?page=" + currentPage;
+                                    if (!$(htmlObjID).next().hasClass("loadEnd")) {
+                                        $(htmlObjID).after("<div class='loadEnd'>已经是底部</div>");
+                                    }
                                 }
-                            }
-                            $(htmlObjID).attr("data-jsonUrl", jsonUrl);
-                            listSetting.currentPage = parseInt(currentPage);
-                            if (!$(this).hasClass("currentPage")) {
-                                $(htmlObjID).bindJSON("list", listSetting, callback);
-                            }
-                        })
+                            };
+                            //加载下一页
+                            var loadNextPage = function () {
+                                if (listSetting.currentPage < totalPage)//小于总页数
+                                {
+                                    //listSetting.currentPage += 1;//取消当前页+1，因为在loading中，已经+1了
+                                    //console.log(listSetting.currentPage);
+                                    var jsonUrl = getJsonUrl(listSetting.currentPage, listSetting.pageSize);
+                                    $(htmlObjID).attr("data-jsonUrl", getJsonUrl(listSetting.currentPage, listSetting.pageSize));
+                                    $("body").unbind("touchend");
+                                    listSetting.currentPage += 1;
+                                    $(htmlObjID).bindJSON("list", listSetting, callback);
+                                }
+                            };
+                            //loadFull如果首页不满，填充第二页
+                            var loadFull = function () {
+                                if (getDocumentTop() < getWindowHeight() && listSetting.currentPage === 1 && totalPage > 1) {
+                                    var jsonUrl = getJsonUrl(2, listSetting.pageSize);
+                                    $(htmlObjID).attr("data-jsonUrl", jsonUrl);
+                                    listSetting.currentPage = 2;
+                                    $(htmlObjID).bindJSON("list", listSetting, callback);
+                                    //loadNextPage();
+                                }
+                            };
+                            //手机端分页
+                            var el = document.querySelector('body');
+                            var startPosition, endPosition, deltaX, deltaY, moveLength;
+
+                            el.addEventListener('touchstart', function (e) {
+                                var touch = e.touches[0];
+                                startPosition = {
+                                    x: touch.pageX,
+                                    y: touch.pageY
+                                }
+                            });
+
+                            $("body").bind('touchend', function (e) {
+                                var touch = e.changedTouches[0];
+                                endPosition = {
+                                    x: touch.pageX,
+                                    y: touch.pageY
+                                }
+
+                                deltaX = endPosition.x - startPosition.x;
+                                deltaY = endPosition.y - startPosition.y;
+                                moveLength = Math.sqrt(Math.pow(Math.abs(deltaX), 2) + Math.pow(Math.abs(deltaY), 2));
+                                console.log(moveLength);
+                                if (deltaY < -10) {
+                                    if (getScrollHeight() == getDocumentTop() + getWindowHeight()) {
+                                        //e.preventDefault();
+                                        loading();//截入ing
+                                        //console.log(totalPage);
+                                        loadNextPage();//加载下一页
+                                        clearStatus();//清除状态
+                                    }
+                                }
+                            });
+                            //$("body").bind('touchend', function (e) {
+                            //    console.log("touchEnd:");
+                            //
+                            //    if (getScrollHeight() == getDocumentTop() + getWindowHeight()) {
+                            //        //e.preventDefault();
+                            //        loading();//截入ing
+                            //        //console.log(totalPage);
+                            //        loadNextPage();//加载下一页
+                            //        clearStatus();//清除状态
+                            //    }
+                            //});
+                            loadFull();
+                        } else {
+                            //PC 端分页代码
+                            var pageHtml = getPageHtml(listSetting);
+                            $(htmlObjID).next().remove();
+                            $(htmlObjID).after(pageHtml);
+                            $(htmlObjID).next().find("li[data-page='" + listSetting.currentPage + "']").addClass("currentPage");
+                            $(htmlObjID).next().find("li").on("click", function () {
+                                var currentPage = $(this).attr("data-page");
+                                var jsonUrl = getJsonUrl(currentPage, listSetting.pageSize);//获取jsonURL
+                                $(htmlObjID).attr("data-jsonUrl", jsonUrl);
+                                listSetting.currentPage = parseInt(currentPage);
+                                if (!$(this).hasClass("currentPage")) {
+                                    $(htmlObjID).bindJSON("list", listSetting, callback);
+                                }
+                            });
+                        }
                     }
                     //分页代码结束
                     if (typeof callback === "function") {
@@ -225,3 +397,4 @@
         return this;
     };
 })(jQuery);
+

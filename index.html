@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>Title</title>
-    <script src="js/lib/jquery-1.12.4.min.js"></script>
-    <script src="js/lib/jquery.bindJSON.js"></script>
+    <script src="js/lib/zepto.min.js"></script>
+    <script src="js/lib/zepto.bindJSON.js"></script>
     <style>
         .red {
             color: red;
@@ -27,7 +28,7 @@
     </li>
 </ul>
 <script>
-    $("#dataObj").bindJSON("list", {isPage: true, pageSize: 2},
+    $("#dataObj").bindJSON("list", {isPage: true, isMobile: true, pageSize:1},
             //回调函数示例，
             function () {
                 //偶数行添加变红样式
