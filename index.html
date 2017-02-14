@@ -6,14 +6,9 @@
     <title>Title</title>
     <script src="js/lib/zepto.min.js"></script>
     <script src="js/lib/zepto.bindJSON.js"></script>
+    <link href="css/css.css" rel="stylesheet" />
     <style>
-        .red {
-            color: red;
-        }
 
-        .jsTemplate, .hide {
-            display: none;
-        }
     </style>
 </head>
 
@@ -28,7 +23,7 @@
     </li>
 </ul>
 <script>
-    $("#dataObj").bindJSON("list", {isPage: true, isMobile: true, pageSize:1},
+    $("#dataObj").bindJSON("list", {isPage: true, pageSize:1},
             //回调函数示例，
             function () {
                 //偶数行添加变红样式

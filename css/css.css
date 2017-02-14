@@ -1,0 +1,23 @@
+.red {
+    color: red;
+}
+
+.jsTemplate, .hide {
+    display: none;
+}
+
+.pageNav {
+    padding: 1rem;
+}
+
+.pageNav li {
+    margin-right: 2px;
+    padding: .2rem;
+    display: inline-block;
+    border: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.pageNav li.currentPage {
+    border-width: 0;
+}

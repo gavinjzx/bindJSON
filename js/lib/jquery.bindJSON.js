@@ -132,6 +132,7 @@
                     totalRecords: 0
                 };
                 //初始化参数
+                listSetting.isMobile = (/(iemobile|iphone|ipod|android|nokia|sonyericsson|blackberry|samsung|sec\-|windows ce|motorola|mot\-|up.b|midp\-)/gi).test(navigator.appVersion);
                 $.extend(listSetting, option);
                 //console.log(listSetting);
                 var htmlObjID = "#" + this.attr("id");
@@ -175,7 +176,7 @@
                             jsonUrl = jsonUrl + "?pageSize=" + pageSize;
                         }
                     }
-                    console.log(jsonUrl);
+                    //console.log(jsonUrl);
                     return jsonUrl;
                 };
                 //获取jsonURL
@@ -190,14 +191,14 @@
                     listSetting.totalRecords = jsonData.totalRecord;
                     if (listSetting.isMobile && listSetting.currentPage > 1) {
                         //如果是手机采用append
-                        $(htmlObjID).prev().remove();
+                        $(htmlObjID).prev(".loading").remove();
                         $(htmlObjID).append(htmlContent);
                         //console.log("htmlObjHtml:" + $(htmlObjID).html());
                         //console.log("htmlContent:" + htmlContent);
                     }
                     else {
                         //如果是非手机采用替换方法
-                        $(htmlObjID).prev().remove();
+                        $(htmlObjID).prev(".loading").remove();
                         $(htmlObjID).html(htmlContent);
                     }
                     //分页代码开始
