@@ -14,7 +14,7 @@ json数据绑定jQuery插件
     &lt;script src="lib/zepto.bindJSON.js"&gt;&lt;/script&gt;</code>
   2、绑定列表数据：
   a.设计模板：
-    <pre><code>&lt;ul  id="dataObj" class="jsTemplate hide"&gt;
+    <pre><code>&lt;ul  id="dataObj" class="hide"&gt;
         &lt;li&gt;
             &lt;div&gt;
                 &lt;div class="hd"&gt;{placeName}&lt;/div&gt;
