@@ -14,7 +14,7 @@ json数据绑定jQuery插件
     &lt;script src="lib/zepto.bindJSON.js"&gt;&lt;/script&gt;</code>
   2、绑定列表数据：
   a.设计模板：
-    <pre><code>&lt;ul class="jsTemplate" id="dataTemplate"&gt;
+    <pre><code>&lt;ul  id="dataObj" class="jsTemplate hide"&gt;
         &lt;li&gt;
             &lt;div&gt;
                 &lt;div class="hd"&gt;{placeName}&lt;/div&gt;
@@ -22,11 +22,7 @@ json数据绑定jQuery插件
             &lt;/div&gt;
         &lt;/li&gt;
     &lt;/ul&gt;</code></pre>
-  b.设计数据容器：
-    <pre><code>&lt;ul id="dataObj" data-templateID="dataTemplate" data-jsonUrl="js/json/data.json"&gt;
-        &lt;li class="loadInfo"&gt;数据加载中……&lt;/li&gt;
-    &lt;/ul&gt;</code></pre>
-  c.JS调用：
+  b.JS调用：
     <pre><code>$("#dataObj").bindJSON("list"});//循环调用json数据列表
     //对循环后的数据再处理，需使用回调函数
     $("#dataObj").bindJSON("list", {}, function () {

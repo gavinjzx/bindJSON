@@ -356,6 +356,7 @@
                     if (typeof callback === "function") {
                         //执行回调函数
                         callback();
+                        $(htmlObjID).removeAttr("style");
                     }
                 });
             },

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1 user-scalable=0"/>
+    <title>2014-4-29</title>
+
+    <script src='js/lib/zepto.min.js'></script>
+    <style>
+        .mask {
+        }
+    </style>
+</head>
+<body>
+
+<div id="spText"></div>
+<div id="outer">
+
+</div>
+
+<script>
+    var $dom = $("body")[0];
+    document.addEventListener("touchmove", function (e) {
+        console.log("touchmoving");
+        $("body").append("<div class='mask'></div>");
+        // 阻止默认的滚动事件
+        //e.preventDefault();
+        // 1. 计算 touchmove 的距离
+        // 2. 重设 $elem 的高度
+
+    });
+</script>
+</body>
+
+</html>
