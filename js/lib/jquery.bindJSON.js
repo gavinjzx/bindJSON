@@ -103,7 +103,7 @@
             tempHtml =
                 //替换总页数
                 tempHtml.replace(/\[page\:pages\]/g, totalPage)
-                    //替换当前页
+                //替换当前页
                     .replace(/\[page\:page\]/g, ps.currentPage ? ps.currentPage : 1)
                     //数字区域
                     .replace(/\[page\:pageLink\]/g, pageHtml);
@@ -149,10 +149,11 @@
                 //数据载入提示并去掉隐藏样式.hide
                 var strLoadInfo = "<div class='loading'>" + $(htmlObjID).attr("data-loadInfo") + "</div>";
                 if (listSetting.currentPage == 1) {
-                    $(htmlObjID).before(strLoadInfo).removeClass("hide");
+                    $(htmlObjID).html(strLoadInfo).removeClass("hide");
                 }
                 //取得带分页代码的jsonUrl
                 var getJsonUrl = function (currentPage, pageSize) {
+
                     var jsonUrl = $(htmlObjID).attr("data-jsonUrl");
                     if (jsonUrl.indexOf("page") > -1) {
                         jsonUrl = jsonUrl.replace(/page=(\d+)*/g, "page=" + currentPage);
@@ -180,12 +181,8 @@
                     return jsonUrl;
                 };
                 //获取jsonURL
-                var strJsonUrl = this.attr("data-jsonUrl");
-                //if (listSetting.isPage) {
-                strJsonUrl = getJsonUrl(listSetting.currentPage, listSetting.pageSize)
-                    //}
-                ;
-                console.log(strJsonUrl);
+                var strJsonUrl = this.attr("data-jsonurl");
+                strJsonUrl = getJsonUrl(listSetting.currentPage, listSetting.pageSize);
                 $.getJSON(strJsonUrl, function (jsonData) {
                     var htmlContent = replaceTemplate(strTemplate, jsonData.data);
                     listSetting.totalRecords = jsonData.totalRecord;
@@ -256,7 +253,7 @@
                             var loading = function () {
                                 if (listSetting.currentPage < totalPage) {
                                     if (!$(".loading")[0]) {
-                                        $(htmlObjID).after("<div class='loading'>载入中……</div>");
+                                        $(htmlObjID).html("<div class='loading'>载入中……</div>");
                                     }
                                     //todo
 
@@ -377,11 +374,11 @@
                         htmlContent = htmlContent.replace(strMatch, hasPrototype(jsonData.data, strFieldName) ? jsonData.data[strFieldName] : "<span style='color:red'>无此字段：" + strFieldName + "</span>");
                     });
                     that.html(htmlContent);
+                    if (typeof callback === "function") {
+                        //执行回调函数
+                        callback();
+                    }
                 });
-                if (typeof callback === "function") {
-                    //执行回调函数
-                    callback();
-                }
             }
         }
         ;
