@@ -184,6 +184,8 @@
                 var strJsonUrl = this.attr("data-jsonurl");
                 strJsonUrl = getJsonUrl(listSetting.currentPage, listSetting.pageSize);
                 $.getJSON(strJsonUrl, function (jsonData) {
+                    console.log(jsonData);
+                    //var jsonData = JSON.parse(jsonData);
                     var htmlContent = replaceTemplate(strTemplate, jsonData.data);
                     listSetting.totalRecords = jsonData.totalRecord;
                     if (listSetting.isMobile && listSetting.currentPage > 1) {
@@ -352,7 +354,7 @@
                     //分页代码结束
                     if (typeof callback === "function") {
                         //执行回调函数
-                        callback();
+                        callback(jsonData);
                         $(htmlObjID).removeAttr("style");
                     }
                 });
@@ -374,9 +376,10 @@
                         htmlContent = htmlContent.replace(strMatch, hasPrototype(jsonData.data, strFieldName) ? jsonData.data[strFieldName] : "<span style='color:red'>无此字段：" + strFieldName + "</span>");
                     });
                     that.html(htmlContent);
+                    that.removeClass("hide");
                     if (typeof callback === "function") {
                         //执行回调函数
-                        callback();
+                        callback(jsonData);
                     }
                 });
             }
