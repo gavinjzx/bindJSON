@@ -122,7 +122,7 @@
             init: function () {
             },
             //list方法
-            list: function (option, callback) {
+            list: function (option, callback, initCallback) {
                 //参数设置
                 var listSetting = {
                     isPage: false,
@@ -134,7 +134,7 @@
                 //初始化参数
                 listSetting.isMobile = (/(iemobile|iphone|ipod|android|nokia|sonyericsson|blackberry|samsung|sec\-|windows ce|motorola|mot\-|up.b|midp\-)/gi).test(navigator.appVersion);
                 $.extend(listSetting, option);
-                //console.log(listSetting);
+                // //console.log(typeof initCallback);
                 var htmlObjID = "#" + this.attr("id");
                 var htmlObjTemplateID = htmlObjID + "Template";
                 //获取模板内容
@@ -184,7 +184,13 @@
                 var strJsonUrl = this.attr("data-jsonurl");
                 strJsonUrl = getJsonUrl(listSetting.currentPage, listSetting.pageSize);
                 $.getJSON(strJsonUrl, function (jsonData) {
-                    console.log(jsonData);
+                    //console.log(typeof initCallback)
+                    if (typeof(initCallback) == "function") {
+                        //执行回调函数
+                        //console.log("init call back");
+                        initCallback(jsonData);
+                    }
+                    //console.log(jsonData);
                     //var jsonData = JSON.parse(jsonData);
                     var htmlContent = replaceTemplate(strTemplate, jsonData.data);
                     listSetting.totalRecords = jsonData.totalRecord;
@@ -311,7 +317,7 @@
                                 deltaX = endPosition.x - startPosition.x;
                                 deltaY = endPosition.y - startPosition.y;
                                 moveLength = Math.sqrt(Math.pow(Math.abs(deltaX), 2) + Math.pow(Math.abs(deltaY), 2));
-                                console.log(moveLength);
+                                //console.log(moveLength);
                                 if (deltaY < -10) {
                                     if (getScrollHeight() == getDocumentTop() + getWindowHeight()) {
                                         //e.preventDefault();
@@ -323,7 +329,7 @@
                                 }
                             });
                             //$("body").bind('touchend', function (e) {
-                            //    console.log("touchEnd:");
+                            //    //console.log("touchEnd:");
                             //
                             //    if (getScrollHeight() == getDocumentTop() + getWindowHeight()) {
                             //        //e.preventDefault();
@@ -359,11 +365,16 @@
                     }
                 });
             },
-            detail: function (option, callback) {
+            detail: function (option, callback, initCallback) {
                 var that = this;
                 //获取jsonURL
                 var strJsonUrl = this.attr("data-jsonUrl");
                 $.getJSON(strJsonUrl, function (jsonData) {
+                    //初始化
+                    if (typeof initCallback === "function") {
+                        //执行回调函数
+                        initCallback(jsonData);
+                    }
                     var htmlContent = that.html();
                     //定义正则表达式
                     var reg = /\{(.*?)\}/g;
@@ -381,6 +392,7 @@
                         //执行回调函数
                         callback(jsonData);
                     }
+
                 });
             }
         }
