@@ -45,7 +45,7 @@
                 pageSize: 20,
                 //总记录
                 totalRecords: 0,
-                pageTemplate: "<div>当前页: [page:page], 总页数: [page:pages]，<ul class='pageNav'>[page:pageLink]</ul></div>",
+                pageTemplate: "<div>当前页: [page:page], 总页数: [page:pages]&nbsp;<ul class='pageNav'>[page:pageLink]</ul></div>",
                 pageLinkTemplate: "<li data-page='[page:pageNum]'>[page:pageNum]</li>"
             }
             ;
@@ -369,13 +369,19 @@
                 var that = this;
                 //获取jsonURL
                 var strJsonUrl = this.attr("data-jsonUrl");
+                var loadInfo = this.attr("data-loadinfo");
+                var htmlContent = this.html();
+                /*20181116新加 start*/
+                this.html(loadInfo);
+                this.removeClass("hide");
+                /*end*/
                 $.getJSON(strJsonUrl, function (jsonData) {
                     //初始化
                     if (typeof initCallback === "function") {
                         //执行回调函数
                         initCallback(jsonData);
                     }
-                    var htmlContent = that.html();
+
                     //定义正则表达式
                     var reg = /\{(.*?)\}/g;
                     var strMatches = htmlContent.match(reg);
